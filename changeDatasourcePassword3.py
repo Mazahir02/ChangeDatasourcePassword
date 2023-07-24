@@ -1,11 +1,14 @@
-# The encrypted password for the datasources
-DBPASSWORD = '{AES256}Dn04cfUTAurjzqFi4i4xJCIb811sLXyCEamvOierBD0='
+# Prompt user to enter the new database password
+DBPASSWORD = raw_input("Enter new DBPASSWORD:")
 
 # Specify the path of the WebLogic domain
 DOMAIN_PATH = '/u02/oracle/Oracle/Middleware/Oracle_Home/domains/fmw_domain'
 
 # List of datasource names for which the password will be updated
 DS_NAME = ['myDataSource', 'myDataSource1']
+
+# Encrypt the entered password using the encrypt() function
+es = encrypt(DBPASSWORD, DOMAIN_PATH)
 
 # Connect to the WebLogic domain
 connect()
@@ -25,7 +28,7 @@ for tmpDS in allDS:
             # If DS_NAME matches, change the password for the datasource
             print 'Changing the Password for DataSource ', dsName
             cd('/JDBCSystemResources/' + dsName + '/JDBCResource/' + dsName + '/JDBCDriverParams/' + dsName)
-            set('PasswordEncrypted', DBPASSWORD)
+            set('PasswordEncrypted', es)
 
 # Save the changes made to the configuration
 save()
