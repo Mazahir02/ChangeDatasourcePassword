@@ -4,8 +4,8 @@ DBPASSWORD = raw_input("Enter new DBPASSWORD:")
 # Specify the path of the WebLogic domain
 DOMAIN_PATH = '/u02/oracle/Oracle/Middleware/Oracle_Home/domains/fmw_domain'
 
-# List of datasource names for which the password will be updated
-DS_NAME = ['myDataSource', 'myDataSource1']
+# The name of the datasource to update
+DS_NAME = 'myDataSource'
 
 # Encrypt the entered password using the encrypt() function
 es = encrypt(DBPASSWORD, DOMAIN_PATH)
@@ -21,14 +21,14 @@ startEdit()
 cd('JDBCSystemResources')
 allDS = cmo.getJDBCSystemResources()
 
-# Loop through all datasources and find the specified DS_NAMEs
+# Loop through all datasources and find the specified DS_NAME
 for tmpDS in allDS:
-    for dsName in DS_NAME:
-        if dsName == tmpDS.getName():
-            # If DS_NAME matches, change the password for the datasource
-            print 'Changing the Password for DataSource ', dsName
-            cd('/JDBCSystemResources/' + dsName + '/JDBCResource/' + dsName + '/JDBCDriverParams/' + dsName)
-            set('PasswordEncrypted', es)
+    dsName = tmpDS.getName()
+    if dsName == DS_NAME:
+        # If DS_NAME matches, change the password for the datasource
+        print 'Changing the Password for DataSource ', dsName
+        cd('/JDBCSystemResources/' + dsName + '/JDBCResource/' + dsName + '/JDBCDriverParams/' + dsName)
+        set('PasswordEncrypted', es)
 
 # Save the changes made to the configuration
 save()
